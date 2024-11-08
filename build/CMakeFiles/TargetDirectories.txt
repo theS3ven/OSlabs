@@ -1,3 +1,0 @@
-/Users/mk/OSlabs/OSlabs/build/CMakeFiles/os.dir
-/Users/mk/OSlabs/OSlabs/build/CMakeFiles/edit_cache.dir
-/Users/mk/OSlabs/OSlabs/build/CMakeFiles/rebuild_cache.dir

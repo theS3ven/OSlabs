@@ -1,19 +1,33 @@
+#include <config/config.h>
+#include <log/log.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 
-#include "header.h"
-
-void RemoveSpaces(int readFD, int writeFD) {
-	char buffer[256];
-	read(readFD, buffer, sizeof(buffer));
-	char resultString[256];
-	int j = 0;
-	for (int i = 1; buffer[i]; i++) {
-		if (!(buffer[i] == ' ' && buffer[i - 1] == ' ')) {
-			resultString[j++] += buffer[i];
+int main() {
+	char buffer[LINE_BUFFER_LEN];
+	char resultString[LINE_BUFFER_LEN];
+	int log_file = create_log_file("child2");
+	log_to_file(log_file, "Dodik is working, pid %d", getpid());
+	ssize_t bytes = 0;
+	while ((bytes = read(STDIN_FILENO, buffer, LINE_BUFFER_LEN))) {
+		log_to_file(log_file, "Dodik with pid %d got \'%s\', bytes read %d", getpid(), buffer, bytes);
+		if (buffer[0] == '\n') {
+			log_to_file(log_file, "Dodik exitiing");
+			break;
 		}
+		int j = 0;
+		for (int i = 0; buffer[i] != '\0'; i++) {
+			if (!(buffer[i] == ' ' && buffer[i + 1] == ' ')) {
+				resultString[j++] = buffer[i];
+			}
+		}
+		resultString[j] = '\0';
+		log_to_file(log_file, "Dodik with pid %d wrote \'%s\'", getpid(), resultString);
+		write(STDOUT_FILENO, resultString, LINE_BUFFER_LEN);
 	}
-	resultString[j] = '\0';
-	write(writeFD, resultString, sizeof(resultString));
+	write(log_file, "", 1);
+	close(log_file);
+	return 0;
 }
