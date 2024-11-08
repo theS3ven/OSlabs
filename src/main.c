@@ -70,27 +70,27 @@ int main() {
 	int log_file = create_log_file("main");
 	int len = 0;
 	do {
-		char buffer[LINE_BUFFER_LEN];
+		char buffer[128];
 		// char *data = get_string(&len);
-		char data2[LINE_BUFFER_LEN];
-		ssize_t read_b = read(STDIN_FILENO, data2, LINE_BUFFER_LEN);
+		char data2[128];
+		ssize_t read_b = read(STDIN_FILENO, data2, 128);
 		if (read_b == -1) {
 			break;
 		}
 
-		write(pipe1[1], data2, LINE_BUFFER_LEN);
+		write(pipe1[1], data2, strlen(data2));
 		if (data2[0] == '\n') {
 			break;
 		}
 		// free(data);
-		ssize_t bytes = read(pipe2[0], buffer, LINE_BUFFER_LEN);
+		ssize_t bytes = read(pipe2[0], buffer, 128);
 		if (bytes == -1) {
 			break;
 		}
 		log_to_file(log_file, "got %ld bytes\n", bytes);
 
-		char str_buff[LINE_BUFFER_LEN + 256];
-		snprintf(str_buff, LINE_BUFFER_LEN + 256, "Got output: %s\n", buffer);
+		char str_buff[128];
+		snprintf(str_buff, 128, "Got output: %s\n", buffer);
 		write(STDOUT_FILENO, str_buff, strlen(str_buff));
 		log_to_file(log_file, "got %s", buffer);
 		// printf("Got output: %s\n", buffer);

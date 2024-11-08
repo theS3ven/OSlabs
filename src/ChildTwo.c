@@ -25,7 +25,7 @@ int main() {
 		}
 		resultString[j] = '\0';
 		log_to_file(log_file, "Dodik with pid %d wrote \'%s\'", getpid(), resultString);
-		write(STDOUT_FILENO, resultString, LINE_BUFFER_LEN);
+		write(STDOUT_FILENO, resultString, strlen(resultString));
 	}
 	write(log_file, "", 1);
 	close(log_file);

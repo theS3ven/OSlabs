@@ -16,7 +16,7 @@ int main() {
 		log_to_file(log_file, "Dolbaeb with pid %d got \'%s\', bytes read %d", getpid(), buffer, bytes);
 		if (buffer[0] == '\n') {
 			log_to_file(log_file, "Dobaeb exitiing");
-			write(STDOUT_FILENO, buffer, LINE_BUFFER_LEN);
+			write(STDOUT_FILENO, buffer, strlen(buffer));
 			break;
 		}
 		for (int i = 0; buffer[i] != '\0'; i++) {
@@ -25,7 +25,7 @@ int main() {
 				buffer[i] += 'a' - 'A';
 			}
 		}
-		if (write(STDOUT_FILENO, buffer, LINE_BUFFER_LEN) == -1) {
+		if (write(STDOUT_FILENO, buffer, strlen(buffer)) == -1) {
 			log_to_file(log_file, "Dolbaeb with pid %d got error during writing", getpid(), buffer);
 		}
 		log_to_file(log_file, "Dolbaeb with pid %d wrote \'%s\'", getpid(), buffer);
