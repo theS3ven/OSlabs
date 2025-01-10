@@ -1,0 +1,11 @@
+Dodik is working, pid 32694
+Dodik with pid 32694 got 'ff          fasfasfas
+', bytes read 22
+Dodik with pid 32694 wrote 'ff fasfasfas
+'
+Dodik with pid 32694 got 'ff   fas
+   fasfasfas
+', bytes read 22
+Dodik with pid 32694 wrote 'ff fas
+ fasfasfas
+'

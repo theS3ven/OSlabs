@@ -1,0 +1,11 @@
+Dolbaeb is working, pid 32693
+Dolbaeb with pid 32693 got 'FF          FASFASFAS
+', bytes read 22
+Dolbaeb with pid 32693 wrote 'ff          fasfasfas
+'
+Dolbaeb with pid 32693 got 'FF   FAS
+   FASFASFAS
+', bytes read 22
+Dolbaeb with pid 32693 wrote 'ff   fas
+   fasfasfas
+'
