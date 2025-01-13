@@ -100,7 +100,7 @@ int main(int argc, char *argv[]){
  		char tmpbuf[128];
     	int n = sprintf(tmpbuf, "x[%d] = %f\n", i, x[i]);
     	write(STDOUT_FILENO, tmpbuf, n);
-		}
+	}
 
     for (int i = 0; i < num; i++) {
         free(A[i]);
