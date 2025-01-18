@@ -9,7 +9,7 @@
 #include <string.h>
 #include "pshm_ucase.h"
 
-#if 0
+#if 1
 char *get_string(int *len) {
 	*len = 0;
 	int capacity = 1;
@@ -38,12 +38,12 @@ char *get_string(int *len);
 
 int main() {
 	const char *args[] = {"./trash", NULL};
-	char* shmpath = args[1];
+	const char* shmpath = args[1];
 	struct shmbuf *shmp;
 	int len;
 	char *s = get_string(&len); // считываем динамическую строку
     const char name[] = "/sosal"; // Имя общей памяти
-	int fd = shm_open(name, O_CREAT | O_EXCL | O_RDWR, 0600);
+	int fd = shm_open(name, O_CREAT | O_RDWR, 0600);
 	if (ftruncate(fd, sizeof(struct shmbuf)) == -1)
     	errExit("ftruncate");
 	shmp = mmap(NULL, sizeof(*shmp), PROT_READ | PROT_WRITE,
@@ -63,22 +63,32 @@ int main() {
     memcpy(shmp->buf, s, len); // записываем строку в общую память
     sem_post(&shmp->sem1); // Разрешаем чтение первому ребенку 
 
-	pid_t pId1 = fork();
+	pid_t pId1, pId2;
+	pId1 = fork();
 	if (pId1 == 0) {
 		int status = execv("./child1", (char **)args);
 		exit(status);
 	}
 
 	if (pId1){
+		pId2 = fork();
+	}
+
+	if (pId2 == 0){
 		int status = execv("./child2", (char **)args);
 		exit(status);
 	}
-
 	if (sem_post(&shmp->sem2) == -1)
         errExit("sem_post");
 
-	shm_unlink(name);
+	sem_wait(&shmp->sem3);
 
-    exit(EXIT_SUCCESS);
+    printf("Received array of size %ld: %s\n", strlen(shmp->buf), shmp->buf);
+
+
+	munmap(shmp, sizeof(struct shmbuf));
+	shm_unlink(name);
+	free(s);
+
 	return 0;
 }
